@@ -1,7 +1,11 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/resources/auth_method.dart';
 import 'package:flutter_application_1/util/colors.dart';
+import 'package:flutter_application_1/util/utils.dart';
 import 'package:flutter_application_1/widgets/text_field_input.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 
 
 
@@ -13,10 +17,12 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  Uint8List? _image;
   @override
   void dispose(){
     super.dispose();
@@ -25,6 +31,13 @@ class _SignupScreenState extends State<SignupScreen> {
     _bioController.dispose();
     _usernameController.dispose();
   }
+    SelectImage() async {
+     Uint8List im = await pickImage(ImageSource.gallery);
+     setState(() {
+       _image = im;
+     });
+    }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,18 +61,23 @@ class _SignupScreenState extends State<SignupScreen> {
               //circular widget to accept and show selected file
               Stack(
                 children: [
-                CircleAvatar(
+               _image!=null? 
+               CircleAvatar(
+                  radius: 64,
+                  backgroundImage: MemoryImage(_image!),
+                )
+                : CircleAvatar(
                   radius: 64,
                   backgroundImage: NetworkImage(
-                    'https://images.unsplash.com/photo-1571757767119-68b8dbed8c97?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-
+                    'https://i.pinimg.com/736x/66/ff/cb/66ffcb56482c64bdf6b6010687938835.jpg',
                   ),
                 ),
+                
                   Positioned(
                     bottom: -10,
                       left: 80,
                       child: IconButton(
-                          onPressed: (){},
+                          onPressed: SelectImage,
                           icon: Icon(Icons.add_a_photo))
                   ),
 
@@ -121,11 +139,30 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   SizedBox(width: 2),
                   GestureDetector(
-                    /*onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const SignupScreen(),
-                      ),
-                    ),*/
+                    onTap: () async {
+                      // Call the signUpUser method from AuthMethod
+                      String res = await AuthMethod().signUpUser(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                        username: _usernameController.text,
+                        bio: _bioController.text,
+                        //profilePicUrl: 'https://example.com/profile_pic.png',
+                        file: _image!, // Placeholder for file upload
+                      );
+                      if (res == "success") {
+                        // Navigate to home screen or show success message
+                        print('success');
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Signup successful!')),
+                        );
+                        Navigator.of(context).pop();
+                      } else {
+                        // Show error message
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(res)),
+                        );
+                      }
+                    },
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: const Text(

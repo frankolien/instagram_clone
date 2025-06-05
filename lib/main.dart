@@ -1,9 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/responsive/mobile_screen_layout.dart';
-import 'package:flutter_application_1/responsive/responsive_layout_screen.dart';
-import 'package:flutter_application_1/responsive/web_screen_layout.dart';
 import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_application_1/util/colors.dart';
 
