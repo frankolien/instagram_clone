@@ -3,28 +3,28 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyDXxf601ZLNu6s67IXldgtps1G7b9vqHoo</string>
+	<string>AIzaSyDkn-mwhVSSP3D7T4Qrnk2DRvSXkEnpiT4</string>
 	<key>GCM_SENDER_ID</key>
-	<string>502117131481</string>
+	<string>961459159935</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.instagramClonee</string>
+	<string>com.company.instaclone</string>
 	<key>PROJECT_ID</key>
-	<string>instagram-flutter-868dd</string>
+	<string>instaclone-e2baa</string>
 	<key>STORAGE_BUCKET</key>
-	<string>instagram-flutter-868dd.firebasestorage.app</string>
+	<string>instaclone-e2baa.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:502117131481:ios:2cce21a7d5155f86c48ac8</string>
+	<string>1:961459159935:ios:5ed8ce1c14d0f459b7104a</string>
 </dict>
 </plist>
