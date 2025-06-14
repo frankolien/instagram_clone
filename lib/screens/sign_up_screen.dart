@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/resources/auth_method.dart';
+import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_application_1/util/colors.dart';
 import 'package:flutter_application_1/util/utils.dart';
 import 'package:flutter_application_1/widgets/text_field_input.dart';
@@ -112,36 +113,15 @@ class _SignupScreenState extends State<SignupScreen> {
                 isPassed: true,
               ),
               SizedBox(height: 24,),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsetsGeometry.symmetric(vertical: 12),
-                alignment: Alignment.center,
-                decoration: ShapeDecoration(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(4),
-                      )
-                  ),
-                  color: blueColor,
-                ),
-                child: Text('Login'),
-              ),
-              SizedBox(height: 12,),
-              Flexible(child: Container(),flex: 2,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: const Text(
-                      'Dont have an account?',
-                    ),
-                  ),
-                  SizedBox(width: 2),
-                  GestureDetector(
-                    onTap: () async {
+              GestureDetector(
+                onTap: () async {
+                  if (_image == null) {
+                    showSnackBar(context, 'Please select an image');
+                    return;
+                  }
+                  
                       // Call the signUpUser method from AuthMethod
-                      String res = await AuthMethod().signUpUser(
+                      String res = await AuthMethods().signUpUser(
                         email: _emailController.text,
                         password: _passwordController.text,
                         username: _usernameController.text,
@@ -163,10 +143,46 @@ class _SignupScreenState extends State<SignupScreen> {
                         );
                       }
                     },
+
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsetsGeometry.symmetric(vertical: 12),
+                  alignment: Alignment.center,
+                  decoration: ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(4),
+                        )
+                    ),
+                    color: blueColor,
+                  ),
+                  child: Text('SignUp'),
+                ),
+              ),
+              SizedBox(height: 12,),
+              Flexible(child: Container(),flex: 2,),
+
+              // Row for login text
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: const Text(
+                      'Dont have an account?',
+                    ),
+                  ),
+                  SizedBox(width: 2),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                    ),
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: const Text(
-                        ' Signup.',
+                        ' Login.',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                         ),

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/resources/auth_method.dart';
+import 'package:flutter_application_1/responsive/mobile_screen_layout.dart';
+import 'package:flutter_application_1/responsive/responsive_layout_screen.dart';
+import 'package:flutter_application_1/responsive/web_screen_layout.dart';
 import 'package:flutter_application_1/screens/sign_up_screen.dart';
 import 'package:flutter_application_1/util/colors.dart';
+import 'package:flutter_application_1/util/utils.dart';
 import 'package:flutter_application_1/widgets/text_field_input.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -16,6 +21,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool isLoading =false;
 
   @override
   void dispose(){
@@ -23,6 +29,31 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
 
+  }
+
+  void loginUser() async{
+    setState(() {
+      isLoading = true;
+    });
+    Future<String> res = AuthMethods().loginUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+    if (res == "success") {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const ResponsiveLayoutScreen(
+            mobileScreenLayout: MobileScreenLayout(),
+            webScreenLayout: WebScreenLayout(),
+          ),
+        ),
+      );
+    } else {
+      showSnackBar(res as BuildContext, context as String);
+      setState(() {
+        isLoading = false;
+      });
+    } 
   }
   @override
   Widget build(BuildContext context) {
@@ -59,19 +90,29 @@ class _LoginScreenState extends State<LoginScreen> {
                 isPassed: true,
               ),
               SizedBox(height: 24,),
-              Container(
-                width: double.infinity,
-                padding: EdgeInsetsGeometry.symmetric(vertical: 12),
-                alignment: Alignment.center,
-                decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(4),
-                      )
+              InkWell(
+                onTap: loginUser,
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsetsGeometry.symmetric(vertical: 12),
+                  alignment: Alignment.center,
+                  decoration: ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(4),
+                        )
+                      ),
+                    color: blueColor,
+                  ),
+                  child: isLoading ? 
+                  const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
                     ),
-                  color: blueColor,
+                  ) :
+                  const
+                   Text('Login'),
                 ),
-                child: Text('Login'),
               ),
               SizedBox(height: 12,),
               Flexible(child: Container(),flex: 2,),

@@ -1,8 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/providers/user_provider.dart';
+import 'package:flutter_application_1/responsive/mobile_screen_layout.dart';
+import 'package:flutter_application_1/responsive/responsive_layout_screen.dart';
+import 'package:flutter_application_1/responsive/web_screen_layout.dart';
 import 'package:flutter_application_1/screens/login_screen.dart';
 import 'package:flutter_application_1/util/colors.dart';
+import 'package:provider/provider.dart';
 
 
 void main() async{
@@ -29,17 +35,49 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Instagram clone',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: mobileBackgroundColor
-        ),
-        home: /*const ResponsiveLayoutScreen(
-          mobileScreenLayout: MobileScreenLayout(),
-          webScreenLayout: WebScreenLayout(),
-        ),*/
-        LoginScreen(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        
+      ],
+      child: MaterialApp(
+        title: 'Instagram clone',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.dark().copyWith(
+          scaffoldBackgroundColor: mobileBackgroundColor
+          ),
+          home: StreamBuilder(
+            
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              
+              if (snapshot.connectionState == ConnectionState.active) {
+                if (snapshot.hasData) {
+                  return const ResponsiveLayoutScreen(
+                    mobileScreenLayout: MobileScreenLayout(), 
+                    webScreenLayout: WebScreenLayout()
+                    );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                }
+              }else {
+              // Optionally sign out the user if Firestore doc is missing
+              FirebaseAuth.instance.signOut();
+              return const LoginScreen();
+            }
+              
+              // While waiting for the connection to complete, show a loading indicator
+              if(snapshot.connectionState == ConnectionState.waiting){
+                 return const Center(child: CircularProgressIndicator(
+                color: primaryColor,
+              ));
+              }
+              return const LoginScreen();
+            }, 
+            
+            
+          ),
+      ),
     ); 
   }
 } 
